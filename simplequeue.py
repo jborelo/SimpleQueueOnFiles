@@ -9,9 +9,6 @@ logger = logging.getLogger(__name__)
 
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-
-
-
 # --------------------------------------------------------------------------------------------
 class SimpleQue:
     dirMessages = ""
@@ -104,11 +101,10 @@ succ = sq.configure('d:/tst4', create_dir=True)
 if not succ:
     print("Error + " + sq.err_message)
 
-
-#dt =  datetime.now()
-#sMessage = "Ala ma konto" +  '.'.join([str(i) for i in [dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second, dt.microsecond]])
+dt =  datetime.now()
+sMessage = "Ala ma konto" +  '.'.join([str(i) for i in [dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second, dt.microsecond]])
 sMessage = "Ala ma kota"
 if not sq.push(sMessage):
     print (sq.err_message)
-#ss = sq.pop()
-#print(ss)
+ss = sq.pop()
+print(ss)

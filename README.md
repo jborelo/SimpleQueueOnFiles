@@ -5,4 +5,5 @@ Very simple queue on shared directory. Each message in separate  file
 * logging
 * tests (pUnit?)
 * delivery method and package
+* comment class and methods
 
