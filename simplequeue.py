@@ -17,6 +17,7 @@ class SimpleQue:
     dirMessages = ""
     filesExt = ""
     err_message = ""
+    bad_files=[]  # contains names of problematic files which could not be read previously
 
 
     def configure(self, dir_messages_name, create_dir=False, files_extention=".sq"):
@@ -57,18 +58,22 @@ class SimpleQue:
             # print("Obudzony")
 
         except:
-            pass
-        return
+            self.err_message= "Can not create or  write message file: " + fi.name
+            return False
 
+        return True
 
-    def pop(self):
+    def clearBadFiles(self):
+        self.bad_files.clear()
+
+    def pop(self, use_bad_files_list=True):
         message = ""
         try:
             files = []
             # load files names
             with os.scandir(self.dirMessages) as dm:
                 for entry in dm:
-                    if not entry.name.startswith('.') and entry.is_file():
+                    if not entry.name.startswith('.') and entry.is_file() and not entry.name in self.bad_files:
                         files.append(entry.name)
 
             if not len(files):
@@ -84,6 +89,7 @@ class SimpleQue:
             fi.close()
             os.remove(fullfilename)
         except:
+            self.bad_files.append(entry.name)
             return ""
 
         return message
@@ -92,10 +98,16 @@ class SimpleQue:
 # --------------------------------------------------------------------------------------------
 
 
-wrkDir = 'd:/tst3'
-sq = SimpleQue(wrkDir)
+sq = SimpleQue()
+succ = sq.configure('d:/tst4', create_dir=True)
 
-sMessage = "Ala ma konto"
-# sq.push(sMessage)
-ss = sq.pop()
-print(ss)
+if not succ:
+    print("Error + " + sq.err_message)
+
+
+dt =  datetime.now()
+sMessage = "Ala ma konto" +  '.'.join([str(i) for i in [dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second, dt.microsecond]])
+if not sq.push(sMessage):
+    print (sq.err_message)
+#ss = sq.pop()
+#print(ss)
