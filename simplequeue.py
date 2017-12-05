@@ -8,6 +8,7 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+print (__name__)
 
 # --------------------------------------------------------------------------------------------
 class SimpleQue:
@@ -17,8 +18,8 @@ class SimpleQue:
     bad_files=[]  # contains names of problematic files which could not be read previously
 
 
-    def configure(self, dir_messages_name, create_dir=False, files_extention=".sq"):
-
+    def configure(self, dir_messages_name, create_dir=False, files_extention=".sq", logger_nam='simpleQueue'):
+        print(__name__)
         # check if  message dir exists (try to create)
         if  not os.path.exists(dir_messages_name):
             if not create_dir:
@@ -60,8 +61,10 @@ class SimpleQue:
 
         return True
 
+
     def clearBadFiles(self):
         self.bad_files.clear()
+
 
     def pop(self, use_bad_files_list=True):
         message = ""
@@ -94,17 +97,3 @@ class SimpleQue:
 
 # --------------------------------------------------------------------------------------------
 
-
-sq = SimpleQue()
-succ = sq.configure('d:/tst4', create_dir=True)
-
-if not succ:
-    print("Error + " + sq.err_message)
-
-dt =  datetime.now()
-sMessage = "Ala ma konto" +  '.'.join([str(i) for i in [dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second, dt.microsecond]])
-sMessage = "Ala ma kota"
-if not sq.push(sMessage):
-    print (sq.err_message)
-ss = sq.pop()
-print(ss)
