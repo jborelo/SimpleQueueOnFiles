@@ -17,7 +17,7 @@ class SimpleQue:
     err_message = ""
     bad_files=[]  # contains names of problematic files which could not be read previously
 
-
+    #---------------------------------------------------------------------------------------------------------
     def configure(self, dir_messages_name, create_dir=False, files_extention=".sq", logger_nam='simpleQueue'):
         print(__name__)
         # check if  message dir exists (try to create)
@@ -38,6 +38,11 @@ class SimpleQue:
         return True
 
 
+    #-------------------------------------------
+    """
+      stores given message in que
+      creates text file containing that message
+    """
     def push(self, strItem):
         try:
             # prepare file name
@@ -62,15 +67,24 @@ class SimpleQue:
         return True
 
 
+    #------------------------------------
     def clearBadFiles(self):
         self.bad_files.clear()
 
 
+    #----------------------------------------------------
+    """
+        returns content of oldest available message
+        if no message available return empy string
+        if  message file can not be read returns ""
+        
+        removes that message from queue
+    """
     def pop(self, use_bad_files_list=True):
         message = ""
         try:
             files = []
-            # load files names
+            # load files names (messages to be retrieved
             with os.scandir(self.dirMessages) as dm:
                 for entry in dm:
                     if not entry.name.startswith('.') and entry.is_file() and not entry.name in self.bad_files:
@@ -89,6 +103,7 @@ class SimpleQue:
             fi.close()
             os.remove(fullfilename)
         except:
+            # add file name to bad files list, to not to be blocked  on next pull
             self.bad_files.append(entry.name)
             return ""
 
