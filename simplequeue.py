@@ -1,65 +1,101 @@
 import tempfile
 import os
 from datetime import datetime
-import logging
 
-logging.basicConfig(level=logging.DEBUG)
+#import logging
+#
+#logging.basicConfig(level=logging.DEBUG)
+#logger = logging.getLogger(__name__)
+#formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+#print (__name__)
 
-logger = logging.getLogger(__name__)
 
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-print (__name__)
+# -------------------------------------------------
+def tostr(intval, strlen):
+    """
+
+    :param intval: value to  be converted to str
+    :param strlen:  required len of str
+    :return:  string eg "tostr(12, 4)  -> "0012"
+    """
+    return str(intval).zfill(strlen)
+
+
+# -----------------------------------------------------
+def generate_file_prefix():
+    """
+    based  on currrent time generates string eg: "2018.02.24.03
+    "yyyy.mm.dd.
+    :return: String
+    """
+    dt = datetime.now()
+    prefix = '.'.join([str(i).zfill(2) for i in [dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second, tostr(dt.microsecond,7)]])
+    return prefix
+
 
 # --------------------------------------------------------------------------------------------
-class SimpleQue:
-    dirMessages = ""
-    filesExt = ""
-    err_message = ""
-    bad_files=[]  # contains names of problematic files which could not be read previously
+class SimpleQue(object):
+
+    def __init__(self):
+        self.dirMessages    = ""
+        self.filesExt       = ""
+        self.err_message    = ""
+        self.bad_files      = []  # contains names of problematic files which could not be read previously
+        self.loggerName     = ""
+        self.configured     = False
+
 
     #---------------------------------------------------------------------------------------------------------
     def configure(self, dir_messages_name, create_dir=False, files_extention=".sq", logger_nam='simpleQueue'):
-        print(__name__)
+        """
+
+        :param dir_messages_name: full name of path to store messages
+        :param create_dir:  should create or fail if not exists
+        :param files_extention:  we  can have several types of messages (topics)
+        :param logger_nam:  name of logger
+        :return:  True if  queue was configured, else False
+        """
+
         # check if  message dir exists (try to create)
         if  not os.path.exists(dir_messages_name):
             if not create_dir:
                 self.err_message = "Directory " + dir_messages_name + "  does not exist"
                 return False
-            else:
-                # try to  create  dir
-                try:
-                    os.mkdir(dir_messages_name)
-                except:
-                    self.err_message="Can not create dir: " + dir_messages_name
-                    return False
+
+            # try to  create  dir
+            try:
+                os.mkdir(dir_messages_name)
+            except:
+                self.err_message="Can not create dir: " + dir_messages_name
+                return False
 
         self.dirMessages = dir_messages_name
         self.filesExt = files_extention
+        self.configured = True
+
         return True
 
 
-    #-------------------------------------------
-    """
-      stores given message in que
-      creates text file containing that message
-    """
+    # -------------------------------------------
     def push(self, strItem):
+        """
+        stores given message in que
+        creates text file containing that message
+
+        :param strItem:   message to  be addrd to queue
+        :return:  False if failed
+        """
+        if not self.configured:
+            return False
+
         try:
-            # prepare file name
-            dt = datetime.now()
-            pr = '.'.join([str(i) for i in [dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second, dt.microsecond]])
-            pr += "_"
+            file_name_prefix = generate_file_prefix() + "_"
 
             # create message file
-            fi = tempfile.NamedTemporaryFile(mode='a', suffix=self.filesExt, delete=False, dir=self.dirMessages,
-                                             prefix=pr)
-            fi.write(strItem)
+            fi = tempfile.NamedTemporaryFile(mode='a', suffix=self.filesExt, delete=False, dir=self.dirMessages, prefix=file_name_prefix)
+            fi.write(str(strItem))
             fi.flush()
             fi.close()
-            # print("Spi")
-            # time.sleep(300)
-            # print("Obudzony")
-
         except:
             self.err_message= "Can not create or  write message file: " + fi.name
             return False
@@ -73,15 +109,19 @@ class SimpleQue:
 
 
     #----------------------------------------------------
-    """
-        returns content of oldest available message
-        if no message available return empy string
-        if  message file can not be read returns ""
-        
-        removes that message from queue
-    """
     def pop(self, use_bad_files_list=True):
-        message = ""
+        """
+            returns content of oldest available message
+            if no message available return empy string
+            in case of error treturn None
+
+            removes that message from queue
+        """
+
+        if not self.configured:
+            return False
+
+        item = ""   # item to  be returned
         try:
             files = []
             # load files names (messages to be retrieved
@@ -99,16 +139,14 @@ class SimpleQue:
 
             # read content into message, and delete message file
             fi = open(fullfilename, mode='r')
-            message = fi.read()
+            item = fi.read()
             fi.close()
             os.remove(fullfilename)
         except:
             # add file name to bad files list, to not to be blocked  on next pull
             self.bad_files.append(entry.name)
-            return ""
+            self.err_message = "Exception on pop"
+            return None
 
-        return message
-
-
-# --------------------------------------------------------------------------------------------
+        return item
 
