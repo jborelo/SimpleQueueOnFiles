@@ -1,21 +1,19 @@
-import simplequeue
-import logging
+import simplequeue as que
 import time
 
-logging.basicConfig(level=logging.DEBUG)
-
-#logger = logging.getLogger(__name__)
-
-#formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-print (__name__)
-
-sq =  simplequeue.SimpleQue()
+# create Que object
+sq = que.SimpleQue()
 sq.configure("que", create_dir=True)
+
+if not sq.configured:
+    print ("Problem with configuration")
+    print (sq.err_message)
+    exit()
 
 cntr=0
 while True:
-    ss = "Message: %s" % cntr
+    ss = f"Message: {cntr}"
     cntr+=1
-    print ("Pushing message: %s" % ss)
-    sq.push(ss)
+    b = sq.push(ss)
+    print (f"Pushing message: {ss} - {b}")
     time.sleep(1)
