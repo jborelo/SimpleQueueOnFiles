@@ -17,8 +17,8 @@ class SimpleQue(object):
     def __init__(self):
         self.dirMessages = ""
         self.filesExt = ""
-        self.err_message = "
-        self.bad_files = []    # contains names of problematic files which could not be read previously
+        self.err_message = ""
+        self.bad_files = []   # contains names of problematic files which could not be read previously
         self.loggerName = ""
         self.configured = False
 
