@@ -10,6 +10,7 @@ if not sq.configured:
     print(sq.err_message)
     exit()
 
+# push several messages
 cntr = 0
 while True:
     message = f"Message: {cntr}"

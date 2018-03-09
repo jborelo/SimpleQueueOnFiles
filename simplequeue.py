@@ -18,7 +18,7 @@ class SimpleQue(object):
         self.dirMessages = ""
         self.filesExt = ""
         self.err_message = ""
-        self.bad_files = []  # contains names of problematic files which could not be read previously
+        self.bad_files = []    # contains names of problematic files which could not be read previously
         self.loggerName = ""
         self.configured = False
 
@@ -26,6 +26,7 @@ class SimpleQue(object):
     @staticmethod
     def tostr(intval, strlen):
         """
+
 
         :param intval: value to  be converted to str
         :param strlen:  required len of str
@@ -37,15 +38,13 @@ class SimpleQue(object):
     @staticmethod
     def generate_file_prefix():
         """
-        based  on currrent time generates string eg: "2018.02.24.03
-        "yyyy.mm.dd.
+        Based  on currrent time generates string yyyy.mm.dd   as: 2018.02.24.03
         :return: String
         """
         dt = datetime.now()
-        prefix = '.'.join([str(i).zfill(2) for i in
-                           [dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second,
-                            SimpleQue.tostr(dt.microsecond, 7)]])
-        return prefix
+        r = '.'.join([str(i).zfill(2) for i in
+                           [dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second, SimpleQue.tostr(dt.microsecond, 7)]])
+        return r
 
     # ---------------------------------------------------------------------------------------------------------
     def configure(self, dir_messages_name, create_dir=False, files_extention=".sq", logger_nam='simpleQueue'):
@@ -106,7 +105,20 @@ class SimpleQue(object):
 
     # ------------------------------------
     def clear_bad_files(self):
+        """
+        removes file nammes  from bad file names list
+        :return:
+        """
         self.bad_files.clear()
+
+    # ------------------------------------
+    def get_bad_files(self):
+        """
+        returns as a list content of bad_files_names
+        :return: list of strings
+        """
+        return self.bad_files
+
 
     # ----------------------------------------------------
     def pop(self, use_bad_files_list=True):
