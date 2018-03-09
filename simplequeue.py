@@ -25,9 +25,8 @@ class SimpleQue(object):
     # -----------------------------------------------------------
     @staticmethod
     def tostr(intval, strlen):
-        """git comm
-
-
+        """
+        Performs to string operation  ensuring  fixlenght output
         :param intval: value to  be converted to str
         :param strlen:  required len of str
         :return:  string eg "tostr(12, 4)  -> "0012"
