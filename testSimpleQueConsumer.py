@@ -1,4 +1,4 @@
-from simplequeue import  SimpleQue
+from simplequeue import SimpleQue
 import time
 
 # logging.basicConfig(level=logging.DEBUG)

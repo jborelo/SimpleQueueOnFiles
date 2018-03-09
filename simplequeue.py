@@ -78,24 +78,24 @@ class SimpleQue(object):
         return True
 
     # -------------------------------------------
-    def push(self, strItem):
+    def push(self, message):
         """
         stores given message in que
         creates text file containing that message
 
-        :param strItem:   message to  be addrd to queue
+        :param message:   message to  be addrd to queue
         :return:  False if failed
         """
         if not self.configured:
             return False
 
-        try:
-            file_name_prefix = SimpleQue.generate_file_prefix() + "_"
+        file_name_prefix = SimpleQue.generate_file_prefix() + "_"
 
+        try:
             # create message file
             fi = tempfile.NamedTemporaryFile(mode='a', suffix=self.filesExt, delete=False, dir=self.dirMessages,
                                              prefix=file_name_prefix)
-            fi.write(str(strItem))
+            fi.write(str(message))
             fi.flush()
             fi.close()
         except Exception as exc:
@@ -105,7 +105,7 @@ class SimpleQue(object):
         return True
 
     # ------------------------------------
-    def clearBadFiles(self):
+    def clear_bad_files(self):
         self.bad_files.clear()
 
     # ----------------------------------------------------
