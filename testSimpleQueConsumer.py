@@ -16,7 +16,7 @@ def unpack(jsonstr_message):
     dtpop = datetime.datetime.now()  # time of pop
     di = json.loads(jsonstr_message)
     dtpush = strtodatetime(di[SimpleQue.KEY_TIME])  # time of push
-    diff = dtpush - dtpop
+    diff = dtpop - dtpush
     text = di[SimpleQue.KEY_CONTENT]
     return (text, diff.seconds, diff.microseconds)
 
