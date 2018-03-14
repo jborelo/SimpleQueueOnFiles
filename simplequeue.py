@@ -16,7 +16,11 @@ from datetime import datetime
 
 # --------------------------------------------------------------------------------------------
 class SimpleQue(object):
+    KEY_TIME = "timestamp"
+    KEY_CONTENT = "content"
+
     __verr__ = "1.5"
+
 
     def __init__(self):
         self.dirMessages = ""
