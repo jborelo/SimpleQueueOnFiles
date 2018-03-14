@@ -10,15 +10,15 @@ def unpack(jsonstr_message):
     """
 
     :param jsonstr_message:
-    :return: tuple (content, timediff in microseconds)
+    :return: tuple (content, seconds, microseconds)
     """
     # extract time and content
     dtpop = datetime.datetime.now()  # time of pop
     di = json.loads(jsonstr_message)
     dtpush = strtodatetime(di[SimpleQue.KEY_TIME])  # time of push
-    diff = (dtpush - dtpop).microseconds
+    diff = dtpush - dtpop
     text = di[SimpleQue.KEY_CONTENT]
-    return (text, diff)
+    return (text, diff.seconds, diff.microseconds)
 
 
 # -----------------------------------------------------
@@ -28,10 +28,10 @@ def pop_messages(sq, verbose=True, waitTime=1):
         message = sq.pop()
 
         if message:
-            text, diff = unpack(message)
-            print(f"{text} - {diff}")
+            text, sec, microsec = unpack(message)
+            print(f"{text} - {sec}, {microsec}")
         else:
-            passa
+            pass
             #print("No message")
             #time.sleep(waitTime)
 
