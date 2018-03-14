@@ -3,9 +3,9 @@ import time
 
 # logging.basicConfig(level=logging.DEBUG)
 
-
 sq = SimpleQue()
 sq.configure("que", create_dir=False)
+
 
 if not sq.configured:
     print(f"Problem with configuration: {sq.err_message}")
@@ -17,4 +17,4 @@ while True:
         print(message)
     else:
         print("No message")
-        time.sleep(1)
+        time.sleep(5)
