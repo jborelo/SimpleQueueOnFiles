@@ -1,4 +1,4 @@
-from simplequeue import SimpleQueFromEmail
+from simplequeue import SimpleQue
 from consumer import  Consumer
 
 # ------------------------------------------------------------
