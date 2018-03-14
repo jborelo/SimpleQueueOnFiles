@@ -1,16 +1,26 @@
 from simplequeue import SimpleQue
-from consumer import  Consumer
+from consumer import Consumer
 
-# ------------------------------------------------------------
-if __name__ == "__main__":
 
+# -------------------------------------------------------------
+def prepareQueue():
     sq = SimpleQue()
     sq.configure("que", create_dir=False)
     if not sq.configured:
         print(f"Problem with configuration: {sq.err_message}")
-        exit()
+        return None
+    return sq
 
+
+if __name__ == "__main__":
+    # prepare tester
     consumer = Consumer()
 
-    consumer.setInputQueue(sq)
+    # prepare queue
+    queue = prepareQueue()
+
+    #
+    consumer.setInputQueue(queue)
+
+    #  do  work
     consumer.pop_messages()
