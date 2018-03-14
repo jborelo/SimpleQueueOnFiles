@@ -2,20 +2,26 @@ from simplequeue import SimpleQue
 from producer import Producer
 
 
-if __name__ == "__main__":
-
-    # do wymiany przygotowywanie kolejki
+# -------------------------------------------------------------
+def prepareQueue():
     sq = SimpleQue()
     sq.configure("que", create_dir=True)
     if not sq.configured:
-        print("Problem with configuration")
-        print(sq.err_message)
-        exit()
+        print(f"Problem with configuration: {sq.err_message}")
+        return None
+    return sq
 
+
+if __name__ == "__main__":
 
     producer = Producer()
-    producer.setOutputQueue(sq)
 
+    # do wymiany przygotowywanie kolejki
+    sq = prepareQueue()
+    if not sq:
+        exit(1)
+
+    producer.setOutputQueue(sq)
 
     print("Starting test")
     producer.push_messages(sq, waitTime=1)
