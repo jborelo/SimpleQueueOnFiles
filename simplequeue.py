@@ -16,6 +16,7 @@ from datetime import datetime
 
 # --------------------------------------------------------------------------------------------
 class SimpleQue(object):
+    __verr__ = "1.5"
 
     def __init__(self):
         self.dirMessages = ""

@@ -3,6 +3,7 @@ import time
 
 # create Que object
 sq = SimpleQue()
+
 sq.configure("que", create_dir=True)
 
 if not sq.configured:
