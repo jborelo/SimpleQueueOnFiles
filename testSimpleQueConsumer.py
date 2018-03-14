@@ -31,8 +31,9 @@ def pop_messages(sq, verbose=True, waitTime=1):
             text, diff = unpack(message)
             print(f"{text} - {diff}")
         else:
-            print("No message")
-            time.sleep(waitTime)
+            pass
+            #print("No message")
+            #time.sleep(waitTime)
 
 
 # ----------------------------------------------------------------
