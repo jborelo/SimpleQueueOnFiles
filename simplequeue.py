@@ -2,9 +2,10 @@ import tempfile
 import os
 from datetime import datetime
 
+
 # ------------------------------------------
-# V 1.5
-#-------------------------------------------
+# V 1.8  - check() added
+# -------------------------------------------
 
 # import logging
 #
@@ -21,12 +22,11 @@ class SimpleQue(object):
 
     __verr__ = "1.5"
 
-
     def __init__(self):
         self.dirMessages = ""
         self.filesExt = ""
         self.err_message = ""
-        self.bad_files = []   # contains names of problematic files which could not be read previously
+        self.bad_files = []  # contains names of problematic files which could not be read previously
         self.loggerName = ""
         self.configured = False
 
@@ -50,7 +50,7 @@ class SimpleQue(object):
         """
         dt = datetime.now()
         r = '.'.join([str(i).zfill(2) for i in
-                           [dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second, SimpleQue.tostr(dt.microsecond, 7)]])
+                      [dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second, SimpleQue.tostr(dt.microsecond, 7)]])
         return r
 
     # ---------------------------------------------------------------------------------------------------------
@@ -77,9 +77,51 @@ class SimpleQue(object):
                 self.err_message = f"Can not create dir: {dir_messages_name} {exc.__cause__}"
                 return False
 
+        # dir exists if here
         self.dirMessages = dir_messages_name
         self.filesExt = files_extention
-        self.configured = True
+
+        self.configured = self.check()
+
+        return True
+
+    # -------------------------------------------------------
+    def check(self):
+        """
+        Checks if file can be written and read to/from queue
+        :return:
+        """
+        dt = datetime.now()
+        mess = dt.__repr__()
+
+        # try to create file
+        try:
+            fi = tempfile.NamedTemporaryFile(mode='w',
+                                             dir=self.dirMessages,
+                                             suffix="test",
+                                             prefix="test",
+                                             delete=False,
+                                             )
+            created_file_name = fi.name
+            fi.write(str(mess))
+            fi.close()
+        except Exception as ex:
+            self.err_message = f"write file test failed: {ex.__str__()}"
+            return False
+
+        # try to read and remove
+        try:
+            fi = open(created_file_name, "r")
+            fc = fi.read()
+            fi.close()
+            os.remove(created_file_name)
+        except Exception as ex:
+            self.err_message = f"read file test failed: {ex.__str__()}"
+            return False
+
+        if not fc == mess:
+            self.err_message = "Written does not match!"
+            return False
 
         return True
 
@@ -99,10 +141,13 @@ class SimpleQue(object):
 
         try:
             # create message file
-            fi = tempfile.NamedTemporaryFile(mode='a', suffix=self.filesExt, delete=False, dir=self.dirMessages,
-                                             prefix=file_name_prefix)
+            fi = tempfile.NamedTemporaryFile(mode='w',
+                                             dir=self.dirMessages,
+                                             prefix=file_name_prefix,
+                                             suffix=self.filesExt,
+                                             delete=False,
+                                             )
             fi.write(str(message))
-            fi.flush()
             fi.close()
         except Exception as exc:
             self.err_message = "Can not create or  write message file: " + fi.name + f"  ({exc.__class__})"
@@ -125,7 +170,6 @@ class SimpleQue(object):
         :return: list of strings
         """
         return self.bad_files
-
 
     # ----------------------------------------------------
     def pop(self, use_bad_files_list=True):
@@ -157,7 +201,7 @@ class SimpleQue(object):
             fullfilename = os.path.join(self.dirMessages, mf)
 
             # read content into message, and delete message file
-            fi = open(fullfilename, mode='r')
+            fi = open(fullfilename, mode='rb')
             item = fi.read()
             fi.close()
             os.remove(fullfilename)
