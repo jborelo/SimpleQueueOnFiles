@@ -34,7 +34,7 @@ class Producer:
             b = self.__sq__.push(message)
 
             if not b:
-                print(f"Pushing message error!! : ..{sq.err_message}..")
+                print(f"Pushing message error!! : ..{self.__sq__.err_message}..")
             time.sleep(waitTime)
 
     def generate_message(self, cnter):
@@ -53,4 +53,3 @@ class Producer:
         """
         if isinstance(o, datetime.datetime):
             return o.__str__()
-
