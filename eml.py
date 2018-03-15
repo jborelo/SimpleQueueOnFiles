@@ -32,6 +32,7 @@ body = "asasasasa" \
        "ewrewrewrewr" \
        "wrewrewrewrew"
 
-send_email(usr, pwd, rcp, subj, body)
+parser = Sa
+#send_email(usr, pwd, rcp, subj, body)
 
 print ("DONE")
