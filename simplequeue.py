@@ -4,7 +4,7 @@ from datetime import datetime
 
 
 # ------------------------------------------
-# V 1.8  - check() added
+# V 1.9  - check() added
 # -------------------------------------------
 
 # import logging
@@ -17,10 +17,11 @@ from datetime import datetime
 
 # --------------------------------------------------------------------------------------------
 class SimpleQue(object):
+    FILE_MODE = 'a'
     KEY_TIME = "timestamp"
     KEY_CONTENT = "content"
 
-    __verr__ = "1.5"
+    __verr__ = "1.9"
 
     def __init__(self):
         self.dirMessages = ""
@@ -96,7 +97,7 @@ class SimpleQue(object):
 
         # try to create file
         try:
-            fi = tempfile.NamedTemporaryFile(mode='w',
+            fi = tempfile.NamedTemporaryFile(mode=SimpleQue.FILE_MODE,
                                              dir=self.dirMessages,
                                              suffix="test",
                                              prefix="test",
@@ -141,7 +142,7 @@ class SimpleQue(object):
 
         try:
             # create message file
-            fi = tempfile.NamedTemporaryFile(mode='w',
+            fi = tempfile.NamedTemporaryFile(mode=SimpleQue.FILE_MODE,
                                              dir=self.dirMessages,
                                              prefix=file_name_prefix,
                                              suffix=self.filesExt,
