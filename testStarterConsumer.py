@@ -1,5 +1,5 @@
 from simplequeue import SimpleQue
-from consumer import Consumer
+from test_consumer_class import Consumer
 
 
 # -------------------------------------------------------------
