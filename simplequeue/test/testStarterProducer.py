@@ -1,5 +1,5 @@
-from simplequeue import SimpleQue
-from test_producer_class import Producer
+from simplequeue.simplequeue import SimpleQue
+from simplequeue.test.test_producer_class import Producer
 
 
 # -------------------------------------------------------------

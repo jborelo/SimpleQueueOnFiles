@@ -1,5 +1,4 @@
-from simplequeue import SimpleQue
-from test_consumer_class import Consumer
+from simplequeue.simplequeue import SimpleQue
 
 
 # -------------------------------------------------------------

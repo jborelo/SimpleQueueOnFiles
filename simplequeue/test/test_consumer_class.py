@@ -1,4 +1,4 @@
-from simplequeue import SimpleQue
+from simplequeue.simplequeue import SimpleQue
 import datetime
 import json
 
