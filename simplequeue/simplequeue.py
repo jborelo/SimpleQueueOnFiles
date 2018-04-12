@@ -14,21 +14,21 @@ logger = logging.getLogger(__name__)
 # noinspection PyBroadException
 class SimpleQue(object):
     __FILEMODE__ = 'a'
-    __TESTFILEPREF__ = "test"   # prefix of files which are beeing used in  checking created queue
-
+    __TESTFILEPREF__ = "test"   # prefix of files which are being used in  checking created queue
     __ver__ = "2.0"
 
+    # -----------------------------------------------------------------
     def __init__(self):
-        self.dirMessages = ""
-        self.filesExt = ""
-        self.err_message = ""
-        self.bad_files = []  # contains names of problematic files which could not be read previously
-        self.loggerName = ""
-        self.configured = False
+        """ members are configured by config() method"""
+        self.dirMessages = ""   # directory where files (messages) are stored
+        self.filesExt = ""      # names extention of message files
+        self.err_message = ""   # last error  message
+        self.bad_files = []  # contains names of problematic files which could not be processed  previously
+        self.configured = False  # set to True when configuration was done sucesfully
 
     # -----------------------------------------------------------
     @staticmethod
-    def __tostr__(intval, strlen):
+    def __to_fixlen_str__(intval, strlen):
         """
         Performs to string operation  ensuring  fixlenght output
         :param intval: value to  be converted to str
@@ -48,7 +48,7 @@ class SimpleQue(object):
         dt = datetime.now()
         r = '.'.join([str(i).zfill(2) for i in
                       [dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second,
-                       SimpleQue.__tostr__(dt.microsecond, 7)]])
+                       SimpleQue.__to_fixlen_str__(dt.microsecond, 7)]])
         return r
 
     # ---------------------------------------------------------------------------------------------------------
@@ -90,7 +90,7 @@ class SimpleQue(object):
         stores given message in que
         creates text file containing that message
 
-        :param message:   message to  be addrd to queue
+        :param message:  string,  message to  be added to queue
         :return:  False if failed
         """
 
